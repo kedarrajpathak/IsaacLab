@@ -18,6 +18,7 @@ import isaaclab.sim as sim_utils
 from isaaclab.actuators import ImplicitActuatorCfg
 from isaaclab.assets.articulation import ArticulationCfg
 from isaaclab.utils.assets import ISAAC_NUCLEUS_DIR
+from isaaclab_assets import ISAACLAB_ASSETS_DATA_DIR
 
 ##
 # Configuration
@@ -175,3 +176,82 @@ KINOVA_GEN3_N7_CFG = ArticulationCfg(
     },
 )
 """Configuration of Kinova Gen3 (7-Dof) arm with no gripper."""
+
+DUAL_KINOVA_CFG = ArticulationCfg(
+    spawn=sim_utils.UsdFileCfg(
+        usd_path=f"{ISAACLAB_ASSETS_DATA_DIR}/Robots/Kinova/Dual_Gen3_Robotiq_2f85/dual_kinova_imitation.usd",
+        rigid_props=sim_utils.RigidBodyPropertiesCfg(
+            disable_gravity=False,
+            max_depenetration_velocity=5.0,
+        ),
+        articulation_props=sim_utils.ArticulationRootPropertiesCfg(
+            enabled_self_collisions=True, solver_position_iteration_count=8, solver_velocity_iteration_count=0
+        ),
+        activate_contact_sensors=False,
+    ),
+    init_state=ArticulationCfg.InitialStateCfg(
+        joint_pos={
+            "left_joint_1": 0.0,
+            "left_joint_2": -0.8650,
+            "left_joint_3": -3.15353,
+            "left_joint_4": -2.1302,
+            "left_joint_5": 0.00588,
+            "left_joint_6": -1.2077,
+            "left_joint_7": 1.5503,
+            "left_robotiq_85_left_knuckle_joint": 0.78,
+            "right_joint_1": 0.0,
+            "right_joint_2": -0.8650,
+            "right_joint_3": -3.15353,
+            "right_joint_4": -2.1302,
+            "right_joint_5": 0.00588,
+            "right_joint_6": -1.2077,
+            "right_joint_7": 1.5503,
+            "right_robotiq_85_left_knuckle_joint": 0.78,
+        },
+    ),
+    actuators={
+        "left_arm": ImplicitActuatorCfg(
+            joint_names_expr=["left_joint_[1-7]"],
+            velocity_limit=100.0,
+            effort_limit={
+                "left_joint_[1-4]": 2340.0,
+                "left_joint_[5-7]": 540.0,
+            },
+            stiffness={
+                "left_joint_[1-7]": 1000.0,
+            },
+            damping={
+                "left_joint_[1-7]": 100.0,
+            },
+        ),
+        "left_gripper": ImplicitActuatorCfg(
+            joint_names_expr=["left_robotiq_85_left_knuckle_joint"],
+            velocity_limit=100.0,
+            effort_limit=16.5,
+            stiffness=0.17,
+            damping=0.0002,
+        ),
+        "right_arm": ImplicitActuatorCfg(
+            joint_names_expr=["right_joint_[1-7]"],
+            velocity_limit=100.0,
+            effort_limit={
+                "right_joint_[1-4]": 2340.0,
+                "right_joint_[5-7]": 540.0,
+            },
+            stiffness={
+                "right_joint_[1-7]": 1000.0,
+            },
+            damping={
+                "right_joint_[1-7]": 100.0,
+            },
+        ),
+        "right_gripper": ImplicitActuatorCfg(
+            joint_names_expr=["right_robotiq_85_right_knuckle_joint"],
+            velocity_limit=100.0,
+            effort_limit=16.5,
+            stiffness=0.17,
+            damping=0.0002,
+        ),
+    },
+)
+"""Configuration of dual Kinova gen3 (7-Dof) arms with Robotiq 2f_85 grippers."""

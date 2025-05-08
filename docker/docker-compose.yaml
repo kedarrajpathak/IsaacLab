@@ -92,6 +92,8 @@ services:
     environment: *default-isaac-lab-environment
     volumes: *default-isaac-lab-volumes
     network_mode: host
+    devices:
+      - "/dev/video0:/dev/video0"  # Pass through video device
     deploy: *default-isaac-lab-deploy
     # This is the entrypoint for the container
     entrypoint: bash
@@ -118,6 +120,8 @@ services:
     environment: *default-isaac-lab-environment
     volumes: *default-isaac-lab-volumes
     network_mode: host
+    devices:
+      - "/dev/video0:/dev/video0"  # Pass through video device
     deploy: *default-isaac-lab-deploy
     # This is the entrypoint for the container
     entrypoint: bash
